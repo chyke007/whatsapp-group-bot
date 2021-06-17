@@ -5,15 +5,30 @@
     <link rel="stylesheet" href="src/css/index.css">
   </head>
   <body>
+    <span id="author">Created With ❤️ by  <a href="https://chibuikenwa.com">Chibuike 🔥</a></span>
     <div class="container">
       <h1>Whatsapp Group Monitor</h1>
-      <textarea placeholder="message" id="message" required></textarea>
-      <input type="text" placeholder="Group name" id="group_name" required>
-      <input type="text" placeholder="Values seperated by comma(Max 10)" id="values" required>
-      <input type="text" placeholder="Your preferred response" id="response" required>
-      <button id="injectMessage">Activate</button>
-      <div id="validation"></div>
+      <section>
+        <select placeholder="Group name" id="group_name" required>
+            <option value="">Glorious Generals</option>
+            <option value="">Group 2</option>
+            <option value="">Purity Generals</option>
+            <option value="">Group 4</option>
+            <option value="">Favour Generals</option>
+        </select>
+        <input type="text" placeholder="Your preferred response" id="response" required>
+      </section>
+      
+      <section>
+        <textarea placeholder="Values seperated by comma(Max 10)" id="values" required></textarea> 
+      </section>
+      <section> <div id="validation"></div> </section>
+      <section>
+        <button id="status">Activate</button>
+        
+      </section>
+     
     </div>
-    <script type="text/javascript" src="assets/js/popup.js"></script>
+    <script type="text/javascript" src="src/js/index.js"></script>
   </body>
 </html>

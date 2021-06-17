@@ -1,37 +1,67 @@
 chrome.storage.sync.clear();
 let button = document.getElementById("status");
 let validation = document.getElementById("validation");
+let select = document.getElementById("group_name");
+let all = document.querySelectorAll('._3Dr46');
+all.forEach((e,i) => {
+    let opt = document.createElement('option');
+    opt.value = i;
+    opt.innerHTML = e.innerText;
+    select.appendChild(opt);
+})
+// document.querySelectorAll('._3Dr46')[3].innerText
 sleep = async (ms)=>{ return new Promise(resolve => setTimeout(resolve, ms)); }
-sending = async ()=>{
-    button.innerHTML="sending."; await sleep(500); 
-    button.innerHTML="sending.."; await sleep(500);
-    button.innerHTML="sending..."; await sleep(500);
-    button.innerHTML="Mischief Managed!"; await sleep(1500);
-    button.innerHTML="send";
+
+activate = async ()=>{
+    button.innerHTML="activating."; await sleep(500); 
+    button.innerHTML="activating.."; await sleep(500);
+    button.innerHTML="activating..."; await sleep(500);
+    button.innerHTML="Activated!"; await sleep(1500);
+    button.innerHTML="Deactivate";
 }
+
+deactivate = async ()=>{
+    button.innerHTML="deactivating."; await sleep(500); 
+    button.innerHTML="deactivating.."; await sleep(500);
+    button.innerHTML="deactivating..."; await sleep(500);
+    button.innerHTML="Dectivated!"; await sleep(1500);
+    button.innerHTML="Activate";
+}
+
 button.addEventListener("click", async ()=> {
-    let message = document.getElementById("message").value;
-    let count = document.getElementById("count").value;
-    if(!message || !count){
-        validation.innerHTML="Some fields are Empty!";
+    let values = document.getElementById("values").value;
+    let response = document.getElementById("response").value;
+    let chat = document.getElementById("chat").value;
+    let activate = true;
+    if(!response){
+        validation.innerHTML="Response cannot be empty!";
         validation.className = "show"; await sleep(2000);
         validation.className = validation.className.replace("show", "");
+        return
     }
-    else if(count>200){
-        validation.innerHTML="Count Limit 200";
-        validation.className = "show"; await sleep(3000);
+    if(!values){
+        validation.innerHTML="Please enter value(s) to watch for!";
+        validation.className = "show"; await sleep(2000);
         validation.className = validation.className.replace("show", "");
-        count=2;
-        sending();
+        return
     }
-    else if(count<1){
+
+    else if(active){
         validation.innerHTML="Count Limit set to 1";
         validation.className = "show"; await sleep(3000);
         validation.className = validation.className.replace("show", "");
         count=1;
-        sending();
+        activate();
     }
-    chrome.storage.sync.set({"message": message});
-    chrome.storage.sync.set({"count": count});  
+    else if(!active){
+        validation.innerHTML="Count Limit set to 1";
+        validation.className = "show"; await sleep(3000);
+        validation.className = validation.className.replace("show", "");
+        count=1;
+        deactivate();
+    }
+    chrome.storage.sync.set({"response": response});
+    chrome.storage.sync.set({"values": values});  
+    chrome.storage.sync.set({"chat": chat}); 
     chrome.runtime.sendMessage({"isActivated": true});
 });

@@ -46,7 +46,8 @@ section {
 
 textarea{
     height: 170px;
-    width: 271px;
+    padding: 10px;
+    width: 250px;
     font-size: 14px;
     background-color: var(--white);
     outline: none;

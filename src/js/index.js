@@ -2,17 +2,31 @@ chrome.storage.sync.clear();
 let button = document.getElementById("status");
 let validation = document.getElementById("validation");
 let select = document.getElementById("group_name");
-let all = document.querySelectorAll('._3Dr46');
-all.forEach((e,i) => {
-    let opt = document.createElement('option');
-    opt.value = i;
-    opt.innerHTML = e.innerText;
-    select.appendChild(opt);
-})
-// document.querySelectorAll('._3Dr46')[3].innerText
 sleep = async (ms)=>{ return new Promise(resolve => setTimeout(resolve, ms)); }
 
-activate = async ()=>{
+chrome.storage.sync.set({"chat": true});
+
+chrome.runtime.sendMessage({"isActivated": true});
+
+start = async() => {
+    
+    await sleep(2000)
+    select.disabled  = false
+    select.innerHTML = ''
+
+    chrome.storage.sync.get('chatt', (data) => {
+        data.chatt.forEach((e) => {
+            let opt = document.createElement('option');
+            opt.value = e.value;
+            opt.innerHTML = e.innerText;
+            select.appendChild(opt);
+        })
+      });
+}
+start()
+
+
+activateF = async ()=>{
     button.innerHTML="activating."; await sleep(500); 
     button.innerHTML="activating.."; await sleep(500);
     button.innerHTML="activating..."; await sleep(500);
@@ -20,7 +34,12 @@ activate = async ()=>{
     button.innerHTML="Deactivate";
 }
 
-deactivate = async ()=>{
+clear = async(x,y) => {
+    document.getElementById("values").value = "";
+    document.getElementById("response").value = "";
+}
+
+deactivateF = async ()=>{
     button.innerHTML="deactivating."; await sleep(500); 
     button.innerHTML="deactivating.."; await sleep(500);
     button.innerHTML="deactivating..."; await sleep(500);
@@ -31,7 +50,7 @@ deactivate = async ()=>{
 button.addEventListener("click", async ()=> {
     let values = document.getElementById("values").value;
     let response = document.getElementById("response").value;
-    let chat = document.getElementById("chat").value;
+    let chatFinal = select.value;
     let activate = true;
     if(!response){
         validation.innerHTML="Response cannot be empty!";
@@ -46,22 +65,22 @@ button.addEventListener("click", async ()=> {
         return
     }
 
-    else if(active){
-        validation.innerHTML="Count Limit set to 1";
+    else if(activate){
+        validation.innerHTML="Active set to 1";
         validation.className = "show"; await sleep(3000);
         validation.className = validation.className.replace("show", "");
-        count=1;
-        activate();
+        activateF();
+        clear()
     }
-    else if(!active){
-        validation.innerHTML="Count Limit set to 1";
+    else if(!activate){
+        validation.innerHTML="Active set to 1";
         validation.className = "show"; await sleep(3000);
         validation.className = validation.className.replace("show", "");
-        count=1;
-        deactivate();
+        // deactivateF(); //stops timeinterval
     }
+
     chrome.storage.sync.set({"response": response});
     chrome.storage.sync.set({"values": values});  
-    chrome.storage.sync.set({"chat": chat}); 
+    chrome.storage.sync.set({"chatFinal": chatFinal}); 
     chrome.runtime.sendMessage({"isActivated": true});
 });

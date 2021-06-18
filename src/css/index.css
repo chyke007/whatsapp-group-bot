@@ -74,30 +74,27 @@ input{
     width: 250px;
 }
 
-#status{
+#status, #kill{
     background-color: var(--white);
     padding: 10px;
-    width: 120px;
+    width: 200px;
     color: #000000;
-    margin-left: 20px;
+    margin: 5px;
     outline: none;
     cursor: pointer;
 }
-#status:hover{
+#status:hover,#kill:hover{
     background-color: var(--icon-green);
     transform: scale(1.09);
     color: var(--white);
 }
+
 #validation {
     visibility: hidden;
-    min-width: 50px;
     margin: auto;
-    background-color: #333;
-    color: aliceblue;
+    color: var(--black);
     text-align: center;
-    border-radius: 2px;
     padding: 2px;
-    position: fixed;
     z-index: 1;
     font-size: 17px;
   }

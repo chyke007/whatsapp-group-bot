@@ -1,5 +1,6 @@
 chrome.storage.sync.clear();
 let button = document.getElementById("status");
+let killButton = document.getElementById("kill");
 let validation = document.getElementById("validation");
 let select = document.getElementById("group_name");
 sleep = async (ms)=>{ return new Promise(resolve => setTimeout(resolve, ms)); }
@@ -26,25 +27,25 @@ start = async() => {
 start()
 
 
-activateF = async ()=>{
-    button.innerHTML="activating."; await sleep(500); 
-    button.innerHTML="activating.."; await sleep(500);
-    button.innerHTML="activating..."; await sleep(500);
-    button.innerHTML="Activated!"; await sleep(1500);
-    button.innerHTML="Deactivate";
-}
-
 clear = async(x,y) => {
     document.getElementById("values").value = "";
     document.getElementById("response").value = "";
 }
 
-deactivateF = async ()=>{
-    button.innerHTML="deactivating."; await sleep(500); 
-    button.innerHTML="deactivating.."; await sleep(500);
-    button.innerHTML="deactivating..."; await sleep(500);
-    button.innerHTML="Dectivated!"; await sleep(1500);
+activateF = async ()=>{
+    button.innerHTML="activating."; await sleep(500); 
+    button.innerHTML="activating.."; await sleep(500);
+    button.innerHTML="activating..."; await sleep(500);
+    button.innerHTML="Activated!";
     button.innerHTML="Activate";
+}
+
+killF = async ()=>{
+    killButton.innerHTML="killing."; await sleep(500); 
+    killButton.innerHTML="killing.."; await sleep(500);
+    killButton.innerHTML="killing..."; await sleep(500);
+    killButton.innerHTML="Killed!"; await sleep(1500);
+    killButton.innerHTML="Kill All";
 }
 
 button.addEventListener("click", async ()=> {
@@ -52,12 +53,7 @@ button.addEventListener("click", async ()=> {
     let response = document.getElementById("response").value;
     let chatFinal = select.value;
     let activate = true;
-    if(!response){
-        validation.innerHTML="Response cannot be empty!";
-        validation.className = "show"; await sleep(2000);
-        validation.className = validation.className.replace("show", "");
-        return
-    }
+    
     if(!values){
         validation.innerHTML="Please enter value(s) to watch for!";
         validation.className = "show"; await sleep(2000);
@@ -65,22 +61,29 @@ button.addEventListener("click", async ()=> {
         return
     }
 
-    else if(activate){
-        validation.innerHTML="Active set to 1";
-        validation.className = "show"; await sleep(3000);
+    if(!response){
+        validation.innerHTML="Response cannot be empty!";
+        validation.className = "show"; await sleep(2000);
         validation.className = validation.className.replace("show", "");
-        activateF();
-        clear()
-    }
-    else if(!activate){
-        validation.innerHTML="Active set to 1";
-        validation.className = "show"; await sleep(3000);
-        validation.className = validation.className.replace("show", "");
-        // deactivateF(); //stops timeinterval
+        return
     }
 
-    chrome.storage.sync.set({"response": response});
-    chrome.storage.sync.set({"values": values});  
-    chrome.storage.sync.set({"chatFinal": chatFinal}); 
-    chrome.runtime.sendMessage({"isActivated": true});
+    else if(activate){
+        activateF();
+        setTimeout(clear(),1000);
+        
+
+        chrome.storage.sync.set({"response": response});
+        chrome.storage.sync.set({"values": values});  
+        chrome.storage.sync.set({"chatFinal": chatFinal}); 
+        chrome.storage.sync.set({"kill": false});
+        chrome.runtime.sendMessage({"isActivated": true});
+
+    }
 });
+
+killButton.addEventListener("click", async ()=> {
+    killF();
+    chrome.storage.sync.set({"kill": 1});
+    chrome.runtime.sendMessage({"isActivated": true});
+})

@@ -1,3 +1,4 @@
+//Functions
 startTimer = async()=>{ setTimeout(inject, 200); } 
 sleep = async (ms)=>{ return new Promise(resolve => setTimeout(resolve, ms)); }
 eventFire = async(MyElement, ElementType)=>{ 
@@ -25,15 +26,40 @@ chat = async() => {
         chrome.storage.sync.set({"chatt": newList});
      }
 }
+
+checkInput = (input, words) => {
+    return words.some(word => input.toLowerCase().includes(word.toLowerCase()));
+   }
+
+var killId = setTimeout(function() {
+    for (var i = killId; i > 0; i--) clearInterval(i)
+  }, 3000);
+
 inject = async() => { 
    
+    let resolveKill = new Promise(function(resolve, reject){
+        chrome.storage.sync.get({"kill": true}, function(options){ resolve(options.kill); })
+    });
+    let kill = await resolveKill; 
+    
+    if(!isNaN(parseInt(kill))){
+        var killId = setTimeout(function() {
+            for (var i = killId; i > 0; i--) clearInterval(i)
+          }, 3000);
+          return;
+    }
+
+    var killId = setTimeout(function() {
+        for (var i = killId; i > 0; i--) clearInterval(i)
+      }, 3000);
+
     let resolveChat = new Promise(function(resolve, reject){
         chrome.storage.sync.get({"chatFinal": true}, function(options){ resolve(options.chatFinal); })
     });
     let chatFinal = await resolveChat; 
     
     if(!(chatFinal && !isNaN(parseInt(chatFinal)))) return
-    if(chatFinal && !isNaN(parseInt(chatFinal))) eventFire(document.querySelectorAll('._3Dr46')[chatFinal],'mousedown')
+    eventFire(document.querySelectorAll('._3Dr46')[chatFinal],'mousedown')
 
     await sleep(2000);
     let messageBox = document.querySelectorAll("[contenteditable='true']")[1]; 
@@ -44,15 +70,46 @@ inject = async() => {
         chrome.storage.sync.get({"response": true}, function(options){ resolve(options.response); })
     });
     let values = await resolveValues; let response = await resolveResponse;
-    let responses = response.split(',');
+    
+    //these stage are inside interval
 
-    for (i = 0; i < responses.length; i++) { 
-        event = document.createEvent("UIEvents"); 
-        messageBox.innerHTML = responses[i]; 
-        event.initUIEvent("input", true, true, window, 1); 
-        messageBox.dispatchEvent(event); 
-        if(responses[0].trim() && values){ eventFire(document.querySelector('span[data-icon="send"]'), 'click'); }
-    } 
+    let count = null;
+    let len = null;
+    let iniLen = null;
+    let incoming  = null;
+    let monitorChats = async function(){
+        
+
+        return function(){
+        len = document.querySelectorAll(".selectable-text.copyable-text span").length;
+        if(!count){
+            iniLen = len;
+        }
+        count = len === 0 ? 0  : len-1
+        if(len!=iniLen){
+            incoming = document.querySelectorAll(".selectable-text.copyable-text span")[count].textContent;
+            
+            iniLen = len
+            if(!checkInput(incoming,values.split(','))){
+                return
+            }
+            
+            let responses = response.split(',');
+            
+            for (i = 0; i < responses.length; i++) { 
+                let stroke = document.createEvent("UIEvents"); 
+                messageBox.innerHTML = responses[i]; 
+                stroke.initUIEvent("input", true, true, window, 1); 
+                messageBox.dispatchEvent(stroke); 
+                if(responses[0].trim() && values){ eventFire(document.querySelector('span[data-icon="send"]'), 'click'); }
+            }
+        }  
+        }()
+            
+        
+    }
+    startTimer2 = async()=>{ setInterval(monitorChats.bind(),200); } 
+    startTimer2()
 }
 startTimer();
 chat()

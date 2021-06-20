@@ -6,6 +6,8 @@ let show = document.getElementById("show");
 let allActive = document.getElementById("all_active");
 let allActiveTbody = allActive.getElementsByTagName('tbody')[0]
 let select = document.getElementById("group_name");
+let cancelTrackings = document.querySelectorAll(".cancel");
+
 sleep = async (ms)=>{ return new Promise(resolve => setTimeout(resolve, ms)); }
 
 show.addEventListener("click", async() => {
@@ -50,11 +52,24 @@ start()
             <td>${i+1}</td>
             <td>${e.values}</td>
             <td>${e.response}</td>
+            <td><span><img src="src/img/cancel.png" title="Remove from trackings" data-value="${i}" class="cancel"></span></td>
             `;
             allActiveTbody.insertRow().innerHTML = appendMe
         })
     });
 }
+
+document.addEventListener('click',async function(e){
+    if(e.target && e.target.className== 'cancel'){
+        //Update db of values and responses
+        await chrome.storage.sync.get('collection', (data) => {
+            
+            data.collection.splice(e.target.getAttribute("data-value"), 1); 
+            chrome.storage.sync.set({"collection": data.collection});
+            return true
+        })
+     }
+ });
 
 setInterval(updateActiveView,2000)
 
@@ -125,4 +140,5 @@ killButton.addEventListener("click", async ()=> {
     chrome.storage.sync.set({"kill": 1});
     chrome.runtime.sendMessage({"isActivated": true});
 })
+
 

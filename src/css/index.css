@@ -130,3 +130,9 @@ table, th,td{
 .all_active td{
     margin: 2px;
 }
+
+.cancel{
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+}

@@ -38,20 +38,21 @@ var killId = setTimeout(function() {
 inject = async() => { 
    
     let resolveKill = new Promise(function(resolve, reject){
-        chrome.storage.sync.get({"kill": true}, function(options){ resolve(options.kill); })
+        chrome.storage.sync.get({"kill": false}, function(options){ resolve(options.kill); })
     });
     let kill = await resolveKill; 
-    
-    if(!isNaN(parseInt(kill))){
-        var killId = setTimeout(function() {
-            for (var i = killId; i > 0; i--) clearInterval(i)
-          }, 3000);
-          return;
-    }
+
 
     var killId = setTimeout(function() {
         for (var i = killId; i > 0; i--) clearInterval(i)
       }, 3000);
+
+    if(kill){
+        chrome.storage.sync.set({"collection": []});
+       return
+    }
+
+    //Clear all running intervals
 
     let resolveChat = new Promise(function(resolve, reject){
         chrome.storage.sync.get({"chatFinal": true}, function(options){ resolve(options.chatFinal); })
@@ -71,6 +72,22 @@ inject = async() => {
     });
     let values = await resolveValues; let response = await resolveResponse;
     
+    //Update db of values and responses
+    await chrome.storage.sync.get('collection', (data) => {
+        let newValueInCollection = {
+            values: values,
+            response: response
+        }
+        console.log(data)
+        data.collection.push(newValueInCollection)
+        chrome.storage.sync.set({"collection": data.collection});
+        return true
+    })
+    
+    await chrome.storage.sync.get('collection', (data) => {
+    console.log(data)
+    })
+
     //these stage are inside interval
 
     let count = null;
@@ -101,7 +118,7 @@ inject = async() => {
                 messageBox.innerHTML = responses[i]; 
                 stroke.initUIEvent("input", true, true, window, 1); 
                 messageBox.dispatchEvent(stroke); 
-                if(responses[0].trim() && values){ eventFire(document.querySelector('span[data-icon="send"]'), 'click'); }
+                if(responses[0].trim() && values.trim()){ eventFire(document.querySelector('span[data-icon="send"]'), 'click'); }
             }
         }  
         }()

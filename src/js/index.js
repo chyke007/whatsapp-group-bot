@@ -2,10 +2,25 @@ chrome.storage.sync.clear();
 let button = document.getElementById("status");
 let killButton = document.getElementById("kill");
 let validation = document.getElementById("validation");
+let show = document.getElementById("show");
+let allActive = document.getElementById("all_active");
+let allActiveTbody = allActive.getElementsByTagName('tbody')[0]
 let select = document.getElementById("group_name");
 sleep = async (ms)=>{ return new Promise(resolve => setTimeout(resolve, ms)); }
 
+show.addEventListener("click", async() => {
+    if(allActive.className == "show") {
+        allActive.className = allActive.className.replace("show", "");
+        show.innerText = "Show Active"
+        return;
+    }
+    allActive.className = "show"
+    show.innerText = "Hide Active"
+})
+
+
 chrome.storage.sync.set({"chat": true});
+chrome.storage.sync.set({"collection": []});
 
 chrome.runtime.sendMessage({"isActivated": true});
 
@@ -26,6 +41,22 @@ start = async() => {
 }
 start()
 
+ function updateActiveView()  {
+    chrome.storage.sync.get('collection', (data) => {
+        allActiveTbody.innerHTML = ''
+        let appendMe = ''
+        data.collection.forEach((e,i) => {
+            appendMe=`
+            <td>${i+1}</td>
+            <td>${e.values}</td>
+            <td>${e.response}</td>
+            `;
+            allActiveTbody.insertRow().innerHTML = appendMe
+        })
+    });
+}
+
+setInterval(updateActiveView,2000)
 
 clear = async(x,y) => {
     document.getElementById("values").value = "";
@@ -46,6 +77,8 @@ killF = async ()=>{
     killButton.innerHTML="killing..."; await sleep(500);
     killButton.innerHTML="Killed!"; await sleep(1500);
     killButton.innerHTML="Kill All";
+    select.disabled  = false;
+    select.style.cursor = "pointer"
 }
 
 button.addEventListener("click", async ()=> {
@@ -79,6 +112,11 @@ button.addEventListener("click", async ()=> {
         chrome.storage.sync.set({"kill": false});
         chrome.runtime.sendMessage({"isActivated": true});
 
+        //
+        select.disabled  = true
+        select.title  = "You need to kill all trackings to change chat"
+        select.style.cursor = "not-allowed"
+
     }
 });
 
@@ -87,3 +125,4 @@ killButton.addEventListener("click", async ()=> {
     chrome.storage.sync.set({"kill": 1});
     chrome.runtime.sendMessage({"isActivated": true});
 })
+

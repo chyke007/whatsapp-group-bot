@@ -74,7 +74,7 @@ input{
     width: 250px;
 }
 
-#status, #kill{
+#status, #kill, #show{
     background-color: var(--white);
     padding: 10px;
     width: 200px;
@@ -83,7 +83,7 @@ input{
     outline: none;
     cursor: pointer;
 }
-#status:hover,#kill:hover{
+#status:hover,#kill:hover, #show:hover{
     background-color: var(--icon-green);
     transform: scale(1.09);
     color: var(--white);
@@ -102,4 +102,31 @@ input{
     visibility: visible;
     -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
     animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+table, th,td{
+    border-spacing: 0;
+    text-indent: initial;
+    border-color: grey;
+    border: 1px solid 
+}
+#all_active{
+    visibility: hidden;
+    padding: 10px;
+    color: #000000;
+    margin: 5px;
+    outline: none;
+
+}
+
+#all_active tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#all_active.show {
+    visibility: visible;
+}
+
+.all_active td{
+    margin: 2px;
 }

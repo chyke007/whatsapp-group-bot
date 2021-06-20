@@ -78,16 +78,11 @@ inject = async() => {
             values: values,
             response: response
         }
-        console.log(data)
+
         data.collection.push(newValueInCollection)
         chrome.storage.sync.set({"collection": data.collection});
         return true
     })
-    
-    await chrome.storage.sync.get('collection', (data) => {
-    console.log(data)
-    })
-
     //these stage are inside interval
 
     let count = null;
@@ -107,19 +102,30 @@ inject = async() => {
             incoming = document.querySelectorAll(".selectable-text.copyable-text span")[count].textContent;
             
             iniLen = len
-            if(!checkInput(incoming,values.split(','))){
-                return
-            }
+
+            //loop through all responses and values and check
+
+            chrome.storage.sync.get('collection', (data) => {
+                data.collection.forEach((e) => {
+              
+                    if(!checkInput(incoming,e.values.split(','))){
+                        return
+                    }else{
+                        let responses = e.response.split(',');
             
-            let responses = response.split(',');
+                        for (i = 0; i < responses.length; i++) { 
+                            let stroke = document.createEvent("UIEvents"); 
+                            messageBox.innerHTML = responses[i]; 
+                            stroke.initUIEvent("input", true, true, window, 1); 
+                            messageBox.dispatchEvent(stroke); 
+                            console.log("sending..")
+                            if(responses[0].trim() && values.trim()){ eventFire(document.querySelector('span[data-icon="send"]'), 'click'); }
+                        }
+                    }
+
+                })
+            })
             
-            for (i = 0; i < responses.length; i++) { 
-                let stroke = document.createEvent("UIEvents"); 
-                messageBox.innerHTML = responses[i]; 
-                stroke.initUIEvent("input", true, true, window, 1); 
-                messageBox.dispatchEvent(stroke); 
-                if(responses[0].trim() && values.trim()){ eventFire(document.querySelector('span[data-icon="send"]'), 'click'); }
-            }
         }  
         }()
             

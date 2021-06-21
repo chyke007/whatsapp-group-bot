@@ -6,35 +6,26 @@
 </h1>
 <h4 align="center">TrackIt, is a WhatsApp tracker that monitors chat messages in selected chat, compares it with provided values and responds with supplied response.</h4>
 
-<p align="center">
-  <a href="#key-features">Key Features</a> •
-  <a href="#how-to-use">How To Use</a> •
-  <a href="#you-may-also-like">Related</a> •
-  <a href="#license">License</a>
-</p>
-
-## Key Features
-
-- Track
-  - Vote for a candidate.
-  - See List of candidates
-  - See a comprehensive result from votes cast
-- View
-  - Prevents a user from voting multiple times
-  - Restricts admin functionality to only an admin
+## :warning: NOTE :warning:
+This application is for private or educational purposes only. Do not use it on other people without their permission. I do not accept responsibility for banned accounts or penalties of any kind caused by the use of this bot. I would like to point out that using a bot violates the Terms and Conditions of Whatsapp. By using the bot, you automatically accept that you yourself are criminally responsible for yourself and you are aware that it violates the guidelines.
 
 ## How To Use
 
-To clone and run this application, you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) v15+ (which comes with [npm](http://npmjs.com)) installed on your computer.
+### Git-Clone
+- Clone the Project: `$ git clone https://github.com/chyke007/whatsapp-group-bot.git`.
+- Either clone it using above command or simply download zip & extract to your desired directory.
 
-```bash
-# Clone this repository
-$ git clone https://github.com/chyke007/whatsapp-group-bot.git
-
-# Go into the repository
-$ cd whatsapp-group-bot
-
-```
+### Installation
+- Open Chrome => Go to settings => Extension => Toggle Developer mode on => Click on Load unpacked => select the cloned directory.
+`Thats all it takes!`:smile:
+### How-To-Use
+- Open Whatsapp web.
+- Open extension
+- Select a contact or a group you would like to track.
+- Enter keywords you want to look out for (seperated by a comma)
+- Enter your desired responses (seperated by a comma)
+- Then click on the Activate button
+`Yeah, you just added a tracker to that chat!`:smile:
 
 
 ## Support

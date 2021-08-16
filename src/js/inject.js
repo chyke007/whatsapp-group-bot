@@ -15,7 +15,7 @@ chat = async() => {
      let chat = await resolveChat;
      if(chat){
         let newList = []
-        let stable = Array.from(document.querySelectorAll('._3Dr46'))
+        let stable = Array.from(document.querySelectorAll('.zoWT4'))
         stable.forEach((element,i) => {
             let obj={}
             obj.value =  i 
@@ -60,7 +60,7 @@ inject = async() => {
     let chatFinal = await resolveChat; 
     
     if(!(chatFinal && !isNaN(parseInt(chatFinal)))) return
-    eventFire(document.querySelectorAll('._3Dr46')[chatFinal],'mousedown')
+    eventFire(document.querySelectorAll('.zoWT4')[chatFinal],'mousedown')
 
     await sleep(2000);
     let messageBox = document.querySelectorAll("[contenteditable='true']")[1]; 

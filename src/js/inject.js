@@ -1,21 +1,25 @@
 //Functions
 startTimer = async()=>{ setTimeout(inject, 200); } 
+
 sleep = async (ms)=>{ return new Promise(resolve => setTimeout(resolve, ms)); }
+
 eventFire = async(MyElement, ElementType)=>{ 
-    let MyEvent = document.createEvent("MouseEvents"); 
-    MyEvent.initMouseEvent(ElementType, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null); 
+    let MyEvent = new MouseEvent(ElementType, {
+        bubbles: true
+    }); 
     MyElement.dispatchEvent(MyEvent); 
 }
+
 chat = async() => {
     let resolveChat = new Promise(function(resolve, reject){
         chrome.storage.sync.get({"chat": true}, function(options){ resolve(options.chat); })
     });
      //enter chat
-   
+     
      let chat = await resolveChat;
      if(chat){
         let newList = []
-        let stable = Array.from(document.querySelectorAll('.zoWT4'))
+        let stable = Array.from(document.querySelectorAll('._21S-L'))
         stable.forEach((element,i) => {
             let obj={}
             obj.value =  i 
@@ -54,20 +58,19 @@ inject = async() => {
 
     //Clear all running intervals
 
-    let resolveChat = new Promise(function(resolve, reject){
+    let resolveChat = new Promise(function(resolve){
         chrome.storage.sync.get({"chatFinal": true}, function(options){ resolve(options.chatFinal); })
     });
     let chatFinal = await resolveChat; 
     
     if(!(chatFinal && !isNaN(parseInt(chatFinal)))) return
-    eventFire(document.querySelectorAll('.zoWT4')[chatFinal],'mousedown')
+    eventFire(document.querySelectorAll('._21S-L')[chatFinal],'mousedown')
 
     await sleep(2000);
-    let messageBox = document.querySelectorAll("[contenteditable='true']")[1]; 
-    let resolveValues = new Promise(function(resolve, reject){
+    let resolveValues = new Promise(function(resolve){
         chrome.storage.sync.get({"values": true}, function(options){ resolve(options.values); })
     });
-    let resolveResponse = new Promise(function(resolve, reject){
+    let resolveResponse = new Promise(function(resolve){
         chrome.storage.sync.get({"response": true}, function(options){ resolve(options.response); })
     });
     let values = await resolveValues; let response = await resolveResponse;
@@ -105,25 +108,23 @@ inject = async() => {
 
             //loop through all responses and values and check
 
-            chrome.storage.sync.get('collection', (data) => {
-                data.collection.forEach((e) => {
-              
-                    if(!checkInput(incoming,e.values.split(','))){
+            chrome.storage.sync.get('collection', async (data) => {
+                for(item of data.collection){
+                
+                    if(!checkInput(incoming,item.values.split(','))){
                         return
                     }else{
-                        let responses = e.response.split(',');
-            
+                        let responses = item.response.split(',');
                         for (i = 0; i < responses.length; i++) { 
-                            let stroke = document.createEvent("UIEvents"); 
-                            messageBox.innerHTML = responses[i]; 
-                            stroke.initUIEvent("input", true, true, window, 1); 
-                            messageBox.dispatchEvent(stroke); 
-                            console.log("sending..")
-                            if(responses[0].trim() && values.trim()){ eventFire(document.querySelector('span[data-icon="send"]'), 'click'); }
+                            await document.execCommand('insertText', false,responses[i]);
+                            await sleep(1000) ;
+                            if(responses[0].trim() && values.trim()){ 
+                                document.querySelector('[data-testid="compose-btn-send"]').click()
+                             }
                         }
                     }
 
-                })
+                }
             })
             
         }  

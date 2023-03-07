@@ -1,22 +1,23 @@
 {
     "name": "WhatsApp Monitor",
-    "version": "1.0",
-    "manifest_version": 2,
+    "version": "1.1",
+    "manifest_version": 3,
     "author": "Nwachukwu Chibuike",
     "description": "Monitors chat messages for specific keywords and returns desired response.",
     "icons":{
       "128":"/src/img/icon.png"
       },
     "background": {
-      "scripts": ["src/js/background.js"],
-      "persistent": false
+      "service_worker": "src/js/background.js"
     },
-    "browser_action": {
+    "action": {
       "default_title": "WhatsApp  Monitor",
       "default_popup": "index.html"
     },
     "permissions": [
+      "scripting",
       "activeTab",
-      "storage"
+      "storage",
+      "tabs"
     ]
   }

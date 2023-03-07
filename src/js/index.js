@@ -73,7 +73,7 @@ document.addEventListener('click',async function(e){
 
 setInterval(updateActiveView,2000)
 
-clear = async(x,y) => {
+clear = () => {
     document.getElementById("values").value = "";
     document.getElementById("response").value = "";
 }
@@ -118,7 +118,7 @@ button.addEventListener("click", async ()=> {
 
     else if(activate){
         activateF();
-        setTimeout(clear(),1000);
+        setTimeout(() => clear(),1000);
         
 
         chrome.storage.sync.set({"response": response});
@@ -127,7 +127,6 @@ button.addEventListener("click", async ()=> {
         chrome.storage.sync.set({"kill": false});
         chrome.runtime.sendMessage({"isActivated": true});
 
-        //
         select.disabled  = true
         select.title  = "You need to kill all trackings to change chat"
         select.style.cursor = "not-allowed"
@@ -135,10 +134,10 @@ button.addEventListener("click", async ()=> {
     }
 });
 
-killButton.addEventListener("click", async ()=> {
+killButton.addEventListener("click", async (id)=> {
     killF();
     chrome.storage.sync.set({"kill": 1});
-    chrome.runtime.sendMessage({"isActivated": true});
+    chrome.runtime.sendMessage({"isActivated": true, id});
 })
 
 

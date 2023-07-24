@@ -19,5 +19,8 @@
       "activeTab",
       "storage",
       "tabs"
+    ],
+    "host_permissions": [
+      "https://web.whatsapp.com/*"
     ]
   }
